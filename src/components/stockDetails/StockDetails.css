@@ -1,0 +1,15 @@
+.main__container{
+    width: 100vw;
+    height: 100vh;
+}
+.stock__filter{
+    height: 60px;
+    width: 300px;
+    background: #e9ecef;
+    outline: none;
+    border: none;
+    padding-left: 20px;
+    cursor: pointer;
+    font-size: larger;
+    margin-left:5vw;
+}

@@ -1,0 +1,1 @@
+export const mainTableHead = ["Symbol","Name","Stock Exchange","Country"]
