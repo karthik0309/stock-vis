@@ -24,7 +24,11 @@ const StockDetails = () => {
     }
 
     useEffect(()=>{
-        fetchAllStocks()
+        //fetchAllStocks()
+        const item = localStorage.getItem('item')
+        const it = item==null ? "{}" : item 
+        const parse=JSON.parse(it)
+        setStockInfo(parse)
     },[])
     
     return (

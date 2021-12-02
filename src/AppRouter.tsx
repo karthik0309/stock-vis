@@ -13,10 +13,11 @@ import {
     Legend,
     Filler
 } from 'chart.js'
+
 import './App.css'
 
 const Home = lazy(()=>import('./pages/home/Home'))
-const StockDetails =lazy(()=>import('./components/stockHistory/StockHistory'))
+const StockDetails =lazy(()=>import('./pages/stockDetails/StockDetails'))
 
 const AppRouter = () => {
     return (

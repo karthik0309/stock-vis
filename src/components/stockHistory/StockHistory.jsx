@@ -2,6 +2,8 @@ import React,{useState,useEffect} from 'react'
 import { Line } from 'react-chartjs-2'
 import { useParams } from 'react-router-dom'
 import { getStockDataInThePeriod } from '../../actions/getStockHistory'
+import  MSFTStockData from '../../json/export.json'
+import StockCard from '../stockCard/StockCard'
 
 const options={
     scales: {
@@ -15,25 +17,34 @@ const options={
                 color:"#fff"
             }
         },
-        y:{
-            grid:{
-                color:"#fff"
-            }
-        }
+        
     }
 }
 
-const StockHistory = ({}) => {
+const chartColors={
+    loss:{
+        background:'rgba(242, 139, 130,0.6)',
+        border:'rgb(242, 139, 130)'
+    },
+    gain:{
+        background: 'rgba(129, 201, 149,0.6)',
+        border: 'rgb(129, 201, 149)'
+    }
+}
+
+const StockHistory = ({stockSymbol}) => {
 
     const [timeLine,setTimeLine] = useState({
         tillDate:'',
         fromDate:''
     })
 
-    const stockSymbol = useParams()
-
-    console.log(stockSymbol)
+    const [currTimeLine,setCurrTimeLine]=useState('1Y')
     const [currStockData,setCurrStockData] = useState([])
+    const [gainInStock,setGainInStock]=useState({
+        type:'',
+        gain:0
+    })
     const [lineChartDetails,setLineChartDetails]=useState({})
 
     const setUTCDate=(type)=>{
@@ -56,43 +67,50 @@ const StockHistory = ({}) => {
 
     const fetchCurrStockData=()=>{
         try{
-            getStockDataInThePeriod(stockSymbol.id,timeLine.fromDate,timeLine.tillDate)
-            .then((res)=>{
-                setCurrStockData(res.data)
-                handleLinChartDetails(res.data)
-            })
+            // getStockDataInThePeriod(stockSymbol,timeLine.fromDate,timeLine.tillDate)
+            // .then((res)=>{
+                const stockData = MSFTStockData
+                const difference = stockData[0].close - stockData[stockData.length-1].close
+                const type = difference<0 ? 'loss' : 'gain'
+                setCurrStockData(stockData)
+                setGainInStock({gain:difference,type:type})
+
+                handleLinChartDetails(stockData.reverse(),type)
+                console.log(stockData)
+            //})
         }
         catch(err){
             console.log(err)
         }
     }
 
-    const handleLinChartDetails=(stockData)=>{
+    const handleLinChartDetails=(stockData,type)=>{
         const data= {
             labels:stockData.map(stock=>stock.date),
             datasets: [{
-                label: stockSymbol.id,
+                label: stockData.symbol,
                 data: stockData.map(stock=>stock.close),
                 fill: true,
-                backgroundColor: 'rgba(75, 192, 192, 0.4)',
-                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: chartColors[type].background,
+                borderColor: chartColors[type].border,
                 borderWidth: 2
             }],
             
         }
-        console.log(data.datasets[0].data)
         setLineChartDetails(data)
     }
 
     useEffect(()=>{
-        setUTCDate('1D')
+        setUTCDate(currTimeLine)
         fetchCurrStockData()
-    },[])
+    },[currTimeLine])
 
+    console.log()
 
     return (
         <div>
             {Object.keys(lineChartDetails).length>1 && <Line data={lineChartDetails} options={options}/>}
+            <StockCard/>
         </div>
     )
 }

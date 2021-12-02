@@ -1,2 +1,2 @@
 export const MARCKET_STACK_API = 'http://api.marketstack.com'
-export const ACCESS_KEY = 'bba358fa4303fedc02cf2e4abeb4a762'
+export const ACCESS_KEY = '98b1a58857b8fa4006752349fd6bd57d'
