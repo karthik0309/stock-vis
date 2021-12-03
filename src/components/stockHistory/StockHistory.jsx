@@ -1,9 +1,9 @@
-import React,{useState,useEffect} from 'react'
+import {useState,useEffect} from 'react'
 import { Line } from 'react-chartjs-2'
-import { useParams } from 'react-router-dom'
-import { getStockDataInThePeriod } from '../../actions/getStockHistory'
+import { getStockDataInThePeriod,getStockHeadlines } from '../../actions/stockInfo/index'
 import  MSFTStockData from '../../json/export.json'
-import StockCard from '../stockCard/StockCard'
+import StockNewsCard from '../stockCard/StockNewsCard.tsx'
+import classes from './stockHitory.module.css'
 
 const options={
     scales: {
@@ -14,25 +14,35 @@ const options={
                 }
             },
             grid:{
-                color:"#fff"
+                color:""
             }
-        },
-        
+        }, 
+        y:{
+            grid:{
+                color:"rgb(48,49,52)"
+            },
+            ticks:{
+                callback: function(value, index, values) {
+                    return '$'+value;
+                },
+                color: "#fff"
+            },
+        }  
     }
 }
 
 const chartColors={
     loss:{
-        background:'rgba(242, 139, 130,0.6)',
+        background:'rgba(242, 139, 130,0.8)',
         border:'rgb(242, 139, 130)'
     },
     gain:{
-        background: 'rgba(129, 201, 149,0.6)',
+        background: 'rgba(129, 201, 149,0.8)',
         border: 'rgb(129, 201, 149)'
     }
 }
 
-const StockHistory = ({stockSymbol}) => {
+const StockHistory = ({stockSymbol,stockName}) => {
 
     const [timeLine,setTimeLine] = useState({
         tillDate:'',
@@ -41,6 +51,8 @@ const StockHistory = ({stockSymbol}) => {
 
     const [currTimeLine,setCurrTimeLine]=useState('1Y')
     const [currStockData,setCurrStockData] = useState([])
+    const [stockNews,setStockNews]=useState([])
+    const [errors,setErrors]=useState('')
     const [gainInStock,setGainInStock]=useState({
         type:'',
         gain:0
@@ -84,11 +96,25 @@ const StockHistory = ({stockSymbol}) => {
         }
     }
 
+    const fetchStockNews=()=>{
+        try{
+            getStockHeadlines(stockSymbol).then((res)=>{
+                if(res.status===429 || res.status===500){
+                    setErrors('Unable to fetch stock news')
+                    return
+                }
+                setStockNews(res.data.data)
+            })
+        }catch(err){
+
+        }
+    }
+
     const handleLinChartDetails=(stockData,type)=>{
         const data= {
             labels:stockData.map(stock=>stock.date),
             datasets: [{
-                label: stockData.symbol,
+                label: stockSymbol,
                 data: stockData.map(stock=>stock.close),
                 fill: true,
                 backgroundColor: chartColors[type].background,
@@ -103,15 +129,23 @@ const StockHistory = ({stockSymbol}) => {
     useEffect(()=>{
         setUTCDate(currTimeLine)
         fetchCurrStockData()
-    },[currTimeLine])
+        fetchStockNews()
+    },[])
 
     console.log()
 
     return (
-        <div>
-            {Object.keys(lineChartDetails).length>1 && <Line data={lineChartDetails} options={options}/>}
-            <StockCard/>
+        <>
+        <div className={classes.chart__container}>
+            {Object.keys(lineChartDetails).length>1 && 
+                <Line 
+                data={lineChartDetails} 
+                options={options} 
+                />
+            }
         </div>
+        <StockNewsCard stockNews={stockNews}/>
+        </>
     )
 }
 

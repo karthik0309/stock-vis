@@ -12,8 +12,8 @@ const Table:React.FC<Props> = ({thead,tbody,filterText}) => {
 
     const navigate = useNavigate()
 
-    const handleRoutes=(id:string)=>{
-        navigate(generatePath('/stocks/:id',{ id }))
+    const handleRoutes=(id:string,name:string)=>{
+        navigate(generatePath('/stocks/:id/:name=',{ id ,name}))
     }
     
     return (
@@ -30,14 +30,14 @@ const Table:React.FC<Props> = ({thead,tbody,filterText}) => {
                 {filterText!=='' ? tbody.filter((ele:any)=>(
                     ele.name.toLowerCase().includes(filterText?.toLowerCase())
                 )).map((ele:any,index)=>(
-                    <tr key={index} onClick={()=>handleRoutes(ele.symbol)}>
+                    <tr key={index} onClick={()=>handleRoutes(ele.symbol,ele.name)}>
                         <td>{ele.symbol}</td>
                         <td>{ele.name}</td>
                         <td>{ele.stock_exchange.acronym}</td>
                         <td>{ele.stock_exchange.country}</td>
                     </tr>
                 )): tbody.map((ele:any,index)=>(
-                    <tr key={index} onClick={()=>handleRoutes(ele.symbol)}>
+                    <tr key={index} onClick={()=>handleRoutes(ele.symbol,ele.name)}>
                         <td>{ele.symbol}</td>
                         <td>{ele.name}</td>
                         <td>{ele.stock_exchange.acronym}</td>

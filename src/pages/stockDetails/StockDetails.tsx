@@ -1,4 +1,3 @@
-import React from 'react'
 import { useParams } from 'react-router-dom'
 import StockHistory from '../../components/stockHistory/StockHistory'
 
@@ -9,7 +8,7 @@ const StockDetails = () => {
 
     return (
         <div>
-            <StockHistory stockSymbol={stockSymbol.id}/>            
+            <StockHistory stockSymbol={stockSymbol.id} stockName={stockSymbol.name}/>            
         </div>
     )
 }

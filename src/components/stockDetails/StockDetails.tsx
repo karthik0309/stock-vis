@@ -1,9 +1,8 @@
 import React,{useState,useEffect} from 'react'
-import axios from 'axios'
 import Table from '../table/Table'
 import { mainTableHead } from '../../constants/constant'
 import './StockDetails.css'
-import { getAllStocks } from '../../actions/getAllStocks'
+import { getAllStocks } from '../../actions/stockInfo/index'
 
 const StockDetails = () => {
     const [stockInfo,setStockInfo] = useState([])

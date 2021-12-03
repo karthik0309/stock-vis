@@ -25,7 +25,7 @@ const AppRouter = () => {
             <Suspense fallback={<h1>Loading...</h1>}>
             <Routes>
                 <Route path="/" element={<Home/>}/>
-                <Route path="/stocks/:id" element={<StockDetails/>}/>
+                <Route path="/stocks/:id/:name" element={<StockDetails/>}/>
             </Routes>
             </Suspense>
         </BrowserRouter>
