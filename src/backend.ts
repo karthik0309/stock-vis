@@ -1,4 +1,4 @@
-export const MARCKET_STACK_API = 'http://api.marketstack.com'
-export const ACCESS_KEY = '98b1a58857b8fa4006752349fd6bd57d'
-export const MARKET_TAUX_API='https://api.marketaux.com'
-export const MARKET_TAUX_API_KEY='ZxAQnV6dTfFNf4RYTO7FoNuvN8oZ33GH5aBR3juN'
+export const MARCKET_STACK_API=process.env.REACT_APP_MARCKET_STACK_API
+export const ACCESS_KEY=process.env.REACT_APP_ACCESS_KEY 
+export const MARKET_TAUX_API= process.env.REACT_APP_MARKET_TAUX_API
+export const MARKET_TAUX_API_KEY=process.env.REACT_APP_MARKET_TAUX_API_KEY

@@ -11,7 +11,6 @@ const StockNewsCard:React.FC<StockNewsType> = ({stockNews}) => {
         window.open(url,"_blank")
     }
 
-    console.log(stockNews)
     return (
         <>
         <h2 className={classes.h2}>Top Stories</h2>

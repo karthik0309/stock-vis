@@ -10,6 +10,8 @@ import {
     Tooltip,
     BarController,
     BarElement,
+    RadarController,
+    RadialLinearScale,
     Legend,
     Filler
 } from 'chart.js'
@@ -44,7 +46,8 @@ ChartJS.register(
     BarElement,
     Tooltip,
     Legend,
-    Filler
+    Filler,
+    RadialLinearScale,
+    RadarController
 )
-
 export default AppRouter

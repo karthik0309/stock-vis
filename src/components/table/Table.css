@@ -7,7 +7,7 @@
     font-family: "Open Sans","Gill Sans MT","Gill Sans",Corbel,Arial,sans-serif;    
     border-collapse: collapse;
     width: 80vw;
-    color: #212529;
+    color: whitesmoke;
     border-collapse: collapse;
     overflow-y: auto;
     position: relative;
@@ -32,11 +32,11 @@ th{
 }
 
 tr:nth-child(even) {
-    background-color: #e9ecef;
+    background-color: red;
 }
 
 tr:nth-child(odd){
-    background-color: #fefefe;
+    background-color: rgb(34, 40, 49);
 }
 
 @media(max-width:600px){
