@@ -20,7 +20,7 @@ const Card:React.FC<CardInfo> = ({title,gain,prevDifference,closedAt}) => {
             </div>
             <div className={classes.info}>
                 <h2 className={classes.title}>
-                    {title.split(" ")[0]}
+                    {title.split(" ")[0].trim()}
                 </h2>
                 <p className={classes.closing__price}>
                     closed at:{closedAt}

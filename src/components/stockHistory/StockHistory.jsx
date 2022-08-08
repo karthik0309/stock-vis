@@ -1,33 +1,22 @@
 import {useState,useEffect} from 'react'
 import { Line } from 'react-chartjs-2'
-import { getStockDataInThePeriod,getStockHeadlines } from '../../actions/stockInfo/index'
-import  MSFTStockData from '../../json/export.json'
+import { getStockDataInThePeriod,getStockHeadlines,getIntraDayStockData } from '../../actions/stockInfo/index'
+import Button from '../button/Button'
 import Card from '../card/Card'
-import StockComparision from '../stockComparision/StockComparision'
-// import StockNewsCard from '../stockCard/StockNewsCard.tsx'
+import StockNewsCard from '../stockCard/StockNewsCard.tsx'
 import classes from './stockHitory.module.css'
 
 const options={
-    scales: {
-        x:{
-            ticks:{
-                callback: function(value, index, values) {
-                    return '';
-                }
-            },
-            grid:{
-                color:""
-            }
-        }, 
+    scales: { 
         y:{
             grid:{
-                color:"rgb(48,49,52)"
+                color:"#fff"
             },
             ticks:{
                 callback: function(value, index, values) {
                     return '$'+value;
                 },
-                color: "#fff"
+                color: "#333333"
             },
         }  
     }
@@ -51,11 +40,9 @@ const StockHistory = ({stockSymbol,stockName}) => {
         fromDate:''
     })
 
-    const [currTimeLine,setCurrTimeLine]=useState('1Y')
+    const [currTimeLine,setCurrTimeLine]=useState('Y')
     const [stockNames,setStockName]=useState([])
     const [currStockData,setCurrStockData] = useState([])
-    const [filteredStock,setFilteredStock]=useState('')
-    const [selectedFilter,setSelectedFilter]=useState('')
     const [stockNews,setStockNews]=useState([])
     const [errors,setErrors]=useState('')
     const [gainInStock,setGainInStock]=useState({
@@ -70,25 +57,30 @@ const StockHistory = ({stockSymbol,stockName}) => {
         const date  = new Date()
         let year  = date.getUTCFullYear()
         let month = date.getUTCMonth() + 1
-        let day   = date.getUTCDate();
-
-        const from = `${year}-${month}-${day}`
+        let day   = date.getUTCDate();     
+        const from = `${year}-${month<10 ? '0'+month : month}-${day<10 ? '0'+day : day}`
         
-        year  = type && type.includes("Y") ? date.getUTCFullYear()- parseInt(type.charAt(0)) : year
-        month = type && type.includes("M") ? date.getUTCMonth()+1===1 ? (year-=1,month=12) : date.getUTCMonth()-parseInt(type.charAt(0))+1 : month
-        day   = type && type.includes("D") ? date.getUTCDate()===1 ? (day=30,month-=1) : date.getUTCDate()-parseInt(type.charAt(0)) : day
+        year  = type && type.includes("Y") ? date.getUTCFullYear()- 1 : year
+        month = type && type.includes("M") ? date.getUTCMonth()+1===1 ? (year-=1,month=12) : date.getUTCMonth() : month
+        day   = type && type.includes("D") ? date.getUTCDate()===1 ? (day=30,month-=1) : date.getUTCDate()-1 : day
 
 
-        const till = `${year}-${month}-${day}`
+        const till = `${year}-${month<10 ? '0'+month : month}-${day<10 ? '0'+day : day}`
 
         setTimeLine({fromDate:from,tillDate:till})
+        if(type.includes("D")){
+            fetchIntraDay(from,till)
+        }else{
+            fetchCurrStockData(from,till)
+        }
     }
 
-    const fetchCurrStockData=()=>{
+
+    const fetchCurrStockData=(from, till)=>{
         try{
-            // getStockDataInThePeriod(stockSymbol,timeLine.fromDate,timeLine.tillDate)
-            // .then((res)=>{
-                const stockData = MSFTStockData
+            getStockDataInThePeriod(stockSymbol,from,till)
+            .then((res)=>{
+                const stockData = res.data
                 const difference = stockData[0].close - stockData[1].close
                 const prevDifference = ((stockData[0].close - stockData[1].close)/stockData[0].close)*100
                 const type = difference<0 ? 'loss' : 'gain'
@@ -99,8 +91,31 @@ const StockHistory = ({stockSymbol,stockName}) => {
                     closedAt:stockData[0].close})
 
                 handleLinChartDetails(stockData.reverse(),type)
-                console.log(stockData)
-            //})
+                // console.log(stockData)
+            })
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
+
+    const fetchIntraDay=(from, till)=>{
+        try{
+            getIntraDayStockData(stockSymbol,from,till)
+            .then((res)=>{
+                const stockData = res.data
+                // console.log(stockData[0])
+                const difference = stockData[0].close - stockData[1].close
+                const prevDifference = ((stockData[0].close - stockData[1].close)/stockData[0].close)*100
+                const type = difference<0 ? 'loss' : 'gain'
+                setCurrStockData(stockData)
+                setGainInStock({gain:difference,
+                    type:type,
+                    prevDifference:prevDifference,
+                    closedAt:stockData[0].close})
+
+                handleLinChartDetails(stockData.reverse(),type)
+            })
         }
         catch(err){
             console.log(err)
@@ -123,7 +138,7 @@ const StockHistory = ({stockSymbol,stockName}) => {
 
     const handleLinChartDetails=(stockData,type)=>{
         const data= {
-            labels:stockData.map(stock=>stock.date),
+            labels:stockData.map(stock=>stock.date.substring(0,10)),
             datasets: [{
                 label: stockSymbol,
                 data: stockData.map(stock=>stock.close),
@@ -139,14 +154,12 @@ const StockHistory = ({stockSymbol,stockName}) => {
 
     useEffect(()=>{
         setUTCDate(currTimeLine)
-        fetchCurrStockData()
-        //fetchStockNews()
-
+        fetchCurrStockData(timeLine.fromDate,timeLine.tillDate)
+        fetchStockNews()
         const stocks=JSON.parse(localStorage.getItem('item'))
         setStockName(stocks)
     },[])
 
-    console.log()
 
     return (
         <div className={classes.main__container}>
@@ -167,29 +180,12 @@ const StockHistory = ({stockSymbol,stockName}) => {
                 </div>
             </div>
 
-            <div id="comparison" className={classes.comparision__container}>
-                <h2>Compare with other stocks</h2>
-                <input type="text"  className={classes.comparision__text_box} 
-                onChange={e=>setFilteredStock(e.target.value)}
-                value={filteredStock}/>
-                {filteredStock.length>0 && filteredStock.length<4 &&
-                    <div className={classes.filtered__text}>
-                        {stockNames.filter(names=>names.symbol.toLowerCase().includes(filteredStock.toLowerCase()))
-                            .map((stock)=>(
-                                <p className={classes.stock__name} key={stock.name} 
-                                onClick={()=>{
-                                    setSelectedFilter(stock.symbol)
-                                    setFilteredStock(stock.symbol)
-                                }}>
-                                    {stock.symbol}
-                                </p>
-                            ))
-                        }
-                    </div>
-                }
-                <StockComparision stock1={stockSymbol} stock2={selectedFilter}/>
+            <div id="button" className={classes.button__container}>
+                <Button className={classes.button} value="1Day" onClick={()=>setUTCDate("D")} type="filled"/>
+                <Button className={classes.button} value="1Month" onClick={()=>setUTCDate("M")} type="filled"/>
+                <Button className={classes.button} value="1Year" onClick={()=>setUTCDate("Y")} type="filled"/>
             </div>
-            {/* <StockNewsCard stockNews={stockNews}/> */}
+            <StockNewsCard stockNews={stockNews}/>
 
         </div>
     )

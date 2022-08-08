@@ -1,0 +1,46 @@
+.button{
+    margin-top: 20px;
+    color: rgb(51, 51, 51);
+    border: 1px solid rgb(51, 51, 51);
+    background-color: transparent;
+    text-decoration: none;
+    display: inline-block;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    border-radius: 0.25em;
+    text-align: center;
+    cursor: pointer;
+}
+
+.button:hover,
+.button:focus{
+    border:1px solid rgb(28,28,255);
+    color:rgb(28,28,255);
+    box-shadow: rgb(210,210,249) 4px 4px 0px 0px;
+    transform: translateY(-0.25em);
+    cursor: pointer;
+}
+
+.filled{
+    margin-top: 20px;
+    width:80px;
+    height:40px;
+    border:1px solid rgb(28,28,255);
+    color:rgb(28,28,255);
+    box-shadow: rgb(210,210,249) 4px 4px 0px 0px;
+    background-color: transparent;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1rem;
+    border-radius: 0.25em;
+    text-align: center;
+    cursor: pointer; 
+}
+
+.filled:hover,
+.filled:focus,
+.filled:active{
+    background-color: rgb(28,28,255);
+    color:white;
+    box-shadow: 0;
+}

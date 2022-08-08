@@ -12,6 +12,8 @@ const StockDetails = () => {
         try{
             getAllStocks().then((res=>{
                 setStockInfo(res.data)
+            localStorage.setItem('item',JSON.stringify(res.data))
+
             }))
         }catch(e){
             console.log(e)
@@ -23,11 +25,11 @@ const StockDetails = () => {
     }
 
     useEffect(()=>{
-        //fetchAllStocks()
-        const item = localStorage.getItem('item')
-        const it = item==null ? "{}" : item 
-        const parse=JSON.parse(it)
-        setStockInfo(parse)
+        fetchAllStocks()
+        // const item = localStorage.getItem('item')
+        // const it = item==null ? "{}" : item 
+        // const parse=JSON.parse(it)
+        // setStockInfo(parse)
     },[])
     
     return (

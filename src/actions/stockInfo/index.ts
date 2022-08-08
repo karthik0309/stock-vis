@@ -15,8 +15,8 @@ export const getAllStocks=async()=>{
 export const getStockDataInThePeriod=async(stock:string,from:string,till:string)=>{
     try{
         const response= await axios.get(`${MARCKET_STACK_API}/v1/eod?access_key=${ACCESS_KEY}`,{params:{
-            date_from:from,
-            date_to:till,
+            date_from:till,
+            date_to:from,
             symbols:stock
         }})
         return response.data
@@ -26,7 +26,17 @@ export const getStockDataInThePeriod=async(stock:string,from:string,till:string)
     }    
 }
 
-
+export const getIntraDayStockData=async(stock:string,from:string,till:string)=>{
+    try{
+        const response= await axios.get(`${MARCKET_STACK_API}/v1/intraday?access_key=${ACCESS_KEY}`,{params:{
+            symbols:stock
+        }})
+        return response.data
+    }
+    catch(err){
+        throw err
+    } 
+}
 
 export const getStockHeadlines=async(stockName:string)=>{
     try{

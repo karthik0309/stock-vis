@@ -1,0 +1,16 @@
+.main_container{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.bg{
+    margin-top: 4.5rem;
+}
+
+.bg>img{
+    height:35vh;
+    width:100vw;
+    object-fit:contain;
+}

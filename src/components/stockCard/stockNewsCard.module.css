@@ -1,6 +1,7 @@
 .h2{
+    margin-top: 20px;
     margin-left: 5vw;
-    color: whitesmoke;
+    color: #333333;
 }
 
 .news_card__container{

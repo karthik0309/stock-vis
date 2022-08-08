@@ -1,5 +1,5 @@
 .main__container{
-    max-height: 500px;
+    height: 500px;
     margin-top: 10vh;
     margin-left: 5vw;
 }
@@ -7,7 +7,7 @@
     font-family: "Open Sans","Gill Sans MT","Gill Sans",Corbel,Arial,sans-serif;    
     border-collapse: collapse;
     width: 80vw;
-    color: whitesmoke;
+    color: #333333;
     border-collapse: collapse;
     overflow-y: auto;
     position: relative;
@@ -26,17 +26,17 @@ td,th{
 }
 
 th{
-    background-color: black;
+    background-color: #333333;
     color: white;
     font-size: medium;
 }
 
 tr:nth-child(even) {
-    background-color: red;
+    background-color: #f2f2f2;
 }
 
 tr:nth-child(odd){
-    background-color: rgb(34, 40, 49);
+    background-color: #ddd;
 }
 
 @media(max-width:600px){
