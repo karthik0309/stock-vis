@@ -3,7 +3,7 @@ import { ACCESS_KEY, MARCKET_STACK_API,MARKET_TAUX_API_KEY,MARKET_TAUX_API } fro
 
 export const getAllStocks=async()=>{
     try{
-        const response = await axios.get(`${MARCKET_STACK_API}/v1/tickers?access_key=${ACCESS_KEY}`)
+        const response = await axios.get(`${MARCKET_STACK_API}/`)
 
         return response.data
     }catch(err){
@@ -14,7 +14,7 @@ export const getAllStocks=async()=>{
 
 export const getStockDataInThePeriod=async(stock:string,from:string,till:string)=>{
     try{
-        const response= await axios.get(`${MARCKET_STACK_API}/v1/eod?access_key=${ACCESS_KEY}`,{params:{
+        const response= await axios.get(`${MARCKET_STACK_API}/stock`,{params:{
             date_from:till,
             date_to:from,
             symbols:stock
@@ -28,7 +28,7 @@ export const getStockDataInThePeriod=async(stock:string,from:string,till:string)
 
 export const getIntraDayStockData=async(stock:string,from:string,till:string)=>{
     try{
-        const response= await axios.get(`${MARCKET_STACK_API}/v1/intraday?access_key=${ACCESS_KEY}`,{params:{
+        const response= await axios.get(`${MARCKET_STACK_API}/stock/intra-day`,{params:{
             symbols:stock
         }})
         return response.data
